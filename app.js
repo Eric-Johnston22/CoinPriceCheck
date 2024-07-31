@@ -5,6 +5,8 @@ const { last } = require('lodash');
 const twilioClient = require('twilio')(process.env.twilio_account_sid, process.env.twilio_key)
 
 
+const myPhone = process.env.PHONE_NUM;
+
 let config = {
     method: 'get',
     maxBodyLength: Infinity,
@@ -32,7 +34,7 @@ function checkBtc()
                 .create({
                     body: `Current Bitcoin price: $${currentPrice}\nThe price of Bitcoin has decreased by $${difference.toFixed(2)}!`,
                     from: 'whatsapp:+14155238886',
-                    to: 'whatsapp:+16143729824',
+                    to: myPhone,
                 })
                 .then((message) => console.log(message.sid));
                 }
@@ -42,6 +44,14 @@ function checkBtc()
         console.log(error);
     });
 };
+
+twilioClient.messages
+    .create({
+        body: `Hi this is a test$`,
+        from: 'whatsapp:+14155238886',
+        to: myPhone,
+    })
+.then((message) => console.log(message.sid));
 
 checkBtc(); // run function to get initial BTC price
 setInterval(checkBtc, 60000)
